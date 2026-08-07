@@ -37,7 +37,7 @@ public class WebClientCoreBankingClient implements CoreBankingClient {
 
     @Override
     @CircuitBreaker(name = "coreBankingCbRetry", fallbackMethod = "fallbackBalance")
-    @Retry(name = "coreBankingCbRetry", fallbackMethod = "fallbackBalance")
+    @Retry(name = "coreBankingCbRetry")
     public Mono<AccountBalance> getAccountBalanceCbRetry(String accountId) {
         System.out.println(" -> Llamando a Core Bancario (CbRetry)");
         return webClient
