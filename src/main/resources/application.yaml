@@ -1,9 +1,24 @@
 spring:
   application:
     name: ms-account
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+        shutdown-timeout: 100ms
 
 core-banking:
   base-url: http://localhost:3001
+
+cache:
+  ttl:
+    account-balance: 5m # Time To Live de los registros en Redis
 
 resilience4j:
   ratelimiter:
@@ -17,7 +32,7 @@ resilience4j:
 management:
   health:
     redis:
-      enabled: false
+      enabled: true
     circuitbreakers:
       enabled: true
   endpoints:
