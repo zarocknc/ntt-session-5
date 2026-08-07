@@ -22,20 +22,5 @@ services:
       redis:
         condition: service_healthy
 
-  mockoon:
-    image: mockoon/cli:latest
-    container_name: ms-account-mockoon
-    ports:
-      - "3001:3001"
-    volumes:
-      - ./mockoon:/data
-    command: ["-d", "/data/core-banking.json"]
-    healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:3001/admin/state').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
-
 volumes:
   redis-data:
