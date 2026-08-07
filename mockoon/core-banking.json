@@ -1,0 +1,158 @@
+{
+  "uuid": "a1b2c3d4-0001-4000-8000-000000000001",
+  "lastMigration": 33,
+  "name": "Core Banking Mock",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "0.0.0.0",
+  "rootChildren": [
+    {
+      "uuid": "a1b2c3d4-0001-4000-8000-000000000002",
+      "type": "route"
+    }
+  ],
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "a1b2c3d4-0001-4000-8000-000000000002",
+      "type": "http",
+      "documentation": "Simula el API Core Banking: GET /accounts/core/:accountId/balance. Varias respuestas segun el valor de accountId: 'error' -> 500, 'delay' -> 200 con latency 5s, otros -> 200 exitoso.",
+      "method": "get",
+      "endpoint": "accounts/core/:accountId/balance",
+      "responses": [
+        {
+          "uuid": "a1b2c3d4-0001-4000-8000-000000000011",
+          "body": "{\"accountId\":\"{{urlParam 'accountId'}}\",\"balance\":1500.00,\"currency\":\"PEN\",\"accountType\":\"PREMIUM\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "200 OK - PREMIUM",
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "a1b2c3d4-0001-4000-8000-000000000012",
+          "body": "{\"accountId\":\"{{urlParam 'accountId'}}\",\"balance\":5000.50,\"currency\":\"USD\",\"accountType\":\"CLASSIC\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "200 OK - CLASSIC",
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "accountId",
+              "value": "classic",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "a1b2c3d4-0001-4000-8000-000000000013",
+          "body": "{\"error\":\"Internal Server Error\",\"message\":\"Simulated core banking failure\"}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "500 Internal Server Error",
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "accountId",
+              "value": "error",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "a1b2c3d4-0001-4000-8000-000000000014",
+          "body": "{\"accountId\":\"{{urlParam 'accountId'}}\",\"balance\":1500.00,\"currency\":\"PEN\",\"accountType\":\"PREMIUM\"}",
+          "latency": 5000,
+          "statusCode": 200,
+          "label": "200 OK - Delay 5s (TimeLimiter)",
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "accountId",
+              "value": "delay",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    { "key": "Content-Type", "value": "application/json" }
+  ],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "data": [],
+  "callbacks": []
+}
