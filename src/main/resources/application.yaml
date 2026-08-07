@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: ms-account
+
+core-banking:
+  base-url: http://localhost:3001
+
+resilience4j:
+  ratelimiter:
+    instances:
+      backendService: # nombre lógico del RateLimiter
+        limit-for-period: 2 # número máximo de llamadas permitidas por periodo
+        limit-refresh-period: 50s # duración del periodo (ej: 1 segundo)
+        timeout-duration: 2s # cuánto esperar para adquirir un permiso
+        registerHealthIndicator: true # expone estado en actuator/health
+
+management:
+  health:
+    redis:
+      enabled: false
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, circuitbreakers, circuitbreakerevents, retryevents
+
+server:
+  port: 9092
+
+logging:
+  level:
+    io.github.resilience4j.ratelimiter: DEBUG
