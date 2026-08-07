@@ -1,9 +1,11 @@
 package com.example.cbredis.msaccount.service;
 
 import com.example.cbredis.msaccount.api.AccountBalanceResponse;
+import com.example.cbredis.msaccount.cache.AccountBalanceCacheRepository;
 import com.example.cbredis.msaccount.core.CoreBankingClient;
 import com.example.cbredis.msaccount.domain.AccountBalance;
 import com.example.cbredis.msaccount.fee.FeeStrategy;
+import com.example.cbredis.msaccount.fee.FeeStrategySelector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -74,7 +76,7 @@ public class AccountBalanceServiceImpl implements AccountBalanceService{
 
     @Override
     public Mono<AccountBalanceResponse> getBalanceTl(String accountId) {
-        return coreBankingClient.getAccountBalanceTl(accountId)
+        return Mono.fromFuture(coreBankingClient.getAccountBalanceTl(accountId))
                 .map(balance ->
                         new AccountBalanceResponse(
                                 balance.accountId(),
