@@ -21,6 +21,33 @@ cache:
     account-balance: 5m # Time To Live de los registros en Redis
 
 resilience4j:
+  circuitbreaker:
+    instances:
+      coreBankingCbRetry:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: COUNT_BASED
+  retry:
+    metrics:
+      enabled: true # habilita métricas de retry para visualizar por actuator
+      legacy: true
+    instances:
+      coreBankingCbRetry:
+        max-attempts: 3
+        wait-duration: 1s
+        retry-exceptions:
+          - org.springframework.web.reactive.function.client.WebClientResponseException
+  timelimiter:
+    metrics:
+      enabled: true
+    instances:
+      coreBankingTl:
+        timeout-duration: 3s
+        cancel-running-future: true
   ratelimiter:
     instances:
       backendService: # nombre lógico del RateLimiter
@@ -38,7 +65,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info, metrics, circuitbreakers, circuitbreakerevents, retryevents
+        include: health, info, metrics, circuitbreakers, circuitbreakerevents, retryevents, timelimiters
 
 server:
   port: 9092
@@ -46,3 +73,4 @@ server:
 logging:
   level:
     io.github.resilience4j.ratelimiter: DEBUG
+    io.github.resilience4j.timelimiter: DEBUG
